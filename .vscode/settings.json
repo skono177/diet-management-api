@@ -1,0 +1,17 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.tabCompletion": "on",
+
+  "java.format.settings.url": "./.vscode/java-google-style.xml",
+  "[java]": {
+    "editor.formatOnSave": true,
+  },
+  "java.format.enabled": true,
+}

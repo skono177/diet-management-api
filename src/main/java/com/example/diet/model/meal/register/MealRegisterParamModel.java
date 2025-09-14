@@ -1,11 +1,11 @@
-package com.example.diet.model.meal.registerMeal;
+package com.example.diet.model.meal.register;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
 @Data
-public class RegisterMealParamModel {
+public class MealRegisterParamModel {
 
     private Integer mealType;
 

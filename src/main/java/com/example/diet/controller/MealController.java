@@ -7,9 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.utils.UserUtils;
-import com.example.diet.model.meal.registerMeal.RegisterMealParamModel;
-import com.example.diet.model.meal.registerMeal.RegisterMealRequestModel;
-import com.example.diet.model.meal.registerMeal.RegisterMealResponseModel;
+import com.example.diet.model.meal.register.MealRegisterRequestModel;
+import com.example.diet.model.meal.register.MealRegisterResponseModel;
 import com.example.diet.service.BaseService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,38 +19,44 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+// @formatter:off
 @RestController
 @RequestMapping(ApiDefine.API_BASE + "meal")
+// @formatter:on
 public class MealController {
 
     private final Logger logger = LogManager.getLogger(MealController.class);
 
-    private final BaseService<RegisterMealRequestModel, RegisterMealParamModel, RegisterMealResponseModel> registerMealService;
+    private final BaseService<MealRegisterRequestModel, MealRegisterResponseModel> registerMealService;
 
     public MealController(
-            BaseService<RegisterMealRequestModel, RegisterMealParamModel, RegisterMealResponseModel> registerMealService) {
+        BaseService<MealRegisterRequestModel, MealRegisterResponseModel> registerMealService) {
         this.registerMealService = registerMealService;
 
     }
 
     @PostMapping
-    public RegisterMealResponseModel registerMeal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestParam(name = "meal_type", required = false) Integer mealType,
-            @RequestParam(required = false) Float calorie,
-            @RequestParam(required = false) String comment,
-            @RequestParam(name = "meal_image_file", required = false) MultipartFile mealImageFile) {
+    public MealRegisterResponseModel registerMeal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        @RequestParam(name = "meal_type", required = false) Integer mealType,
+        @RequestParam(required = false) Float calorie,
+        @RequestParam(required = false) String comment,
+        @RequestParam(name = "meal_image_file", required = false) MultipartFile mealImageFile) {
 
-        RegisterMealRequestModel requestModel = new RegisterMealRequestModel();
+        MealRegisterRequestModel requestModel = new MealRegisterRequestModel(
+            mealType,
+            calorie,
+            comment,
+            mealImageFile);
         if (registerMealService.validation(requestModel) == false) {
 
         }
 
         String userId = UserUtils.getUserId("");
-        RegisterMealParamModel paramModel = registerMealService.createParam(requestModel);
 
-        RegisterMealResponseModel responseModel = registerMealService.execute(userId, paramModel);
+        MealRegisterResponseModel responseModel = registerMealService
+            .execute(userId, requestModel);
 
         logger.info(calorie);
         return responseModel;

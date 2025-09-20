@@ -7,7 +7,7 @@ public class RegisterMealRequestDto {
 
     private Integer mealType;
 
-    private Float calorie;
+    private Integer calorie;
 
     private String comment;
 

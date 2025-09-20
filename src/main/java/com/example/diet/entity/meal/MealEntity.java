@@ -41,7 +41,7 @@ public class MealEntity {
     private Integer mealType;
 
     @Column(name = "calorie")
-    private Float calorie;
+    private Integer calorie;
 
     @Column(name = "comment", length = 100)
     private String comment;

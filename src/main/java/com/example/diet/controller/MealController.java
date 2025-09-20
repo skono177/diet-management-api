@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.utils.UserUtils;
+import com.example.diet.dto.validation.ValidationErrResponse;
 import com.example.diet.model.meal.register.MealRegisterRequest;
 import com.example.diet.model.meal.register.MealRegisterResponse;
 import com.example.diet.service.BaseService;
@@ -29,10 +30,10 @@ public class MealController {
 
     private final Logger logger = LogManager.getLogger(MealController.class);
 
-    private final BaseService<MealRegisterRequest, MealRegisterResponse> registerMealService;
+    private final BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService;
 
     public MealController(
-        BaseService<MealRegisterRequest, MealRegisterResponse> registerMealService) {
+        BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService) {
         this.registerMealService = registerMealService;
 
     }
@@ -41,8 +42,8 @@ public class MealController {
     public MealRegisterResponse registerMeal(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestParam(name = "meal_type", required = false) Integer mealType,
-        @RequestParam(required = false) Float calorie,
+        @RequestParam(name = "meal_type", required = false) String mealType,
+        @RequestParam(required = false) String calorie,
         @RequestParam(required = false) String comment,
         @RequestParam(name = "meal_image_file", required = false) List<MultipartFile> mealImageFiles) {
 
@@ -51,13 +52,18 @@ public class MealController {
             calorie,
             comment,
             mealImageFiles);
-        if (registerMealService.validation(requestModel) == false) {
 
+        MealRegisterResponse responseModel = new MealRegisterResponse();
+        List<ValidationErrResponse> validationRets = registerMealService
+            .validation(requestModel);
+        if (validationRets.size() > 0) {
+            response.setStatus(400);
+            responseModel.setErrors(validationRets);
+            return responseModel;
         }
 
         String userId = UserUtils.getUserId("");
 
-        MealRegisterResponse responseModel = null;
         try {
             responseModel = registerMealService.execute(userId, requestModel);
         } catch (Exception e) {

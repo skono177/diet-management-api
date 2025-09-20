@@ -1,6 +1,8 @@
 package com.example.diet.common.utils;
 
-import com.example.diet.common.define.CommonDefine;
+import java.util.List;
+
+import com.example.diet.common.define.FormatDefine;
 
 public class CommonUtils {
 
@@ -8,7 +10,22 @@ public class CommonUtils {
         Integer mealId,
         Integer mealImageId) {
 
-        return String.format(CommonDefine.MEAL_IMAGE_PATH_FORMAT, mealId,
+        return String.format(FormatDefine.MEAL_IMAGE_PATH_FORMAT, mealId,
             mealImageId);
+    }
+
+    public static String connectStr(String connectChar,
+        List<String> paramList) {
+        StringBuffer ret = new StringBuffer();
+
+        Integer paramIdx = 1;
+        for (String str : paramList) {
+            ret.append(str);
+            if (paramList.size() > paramIdx) {
+                ret.append(connectChar);
+                paramIdx++;
+            }
+        }
+        return ret.toString();
     }
 }

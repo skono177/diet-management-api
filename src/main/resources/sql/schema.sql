@@ -22,7 +22,7 @@ create table diet.t_user (
   , register_by CHAR(36)
   , register_date DATE
   , meal_type INT
-  , calorie FLOAT
+  , calorie INT
   , comment VARCHAR(100)
   , created_by CHAR(36) not null
   , created_at DATETIME not null
@@ -54,7 +54,7 @@ create table diet.t_meal (
   , register_by CHAR(36) not null
   , register_date DATE
   , meal_type INT
-  , calorie FLOAT
+  , calorie INT
   , comment VARCHAR(100)
   , created_by CHAR(36) not null
   , created_at DATETIME not null

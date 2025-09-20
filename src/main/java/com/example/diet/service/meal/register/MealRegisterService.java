@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -11,7 +13,12 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.example.diet.common.define.FormatDefine;
+import com.example.diet.common.define.ApiDefine.RequestItem;
+import com.example.diet.common.define.ApiDefine.ValidateErrRet;
+import com.example.diet.common.define.ErrorMessage.MealValidationErrMsg;
 import com.example.diet.common.utils.CommonUtils;
+import com.example.diet.dto.validation.ValidationErrResponse;
 import com.example.diet.entity.meal.MealEntity;
 import com.example.diet.entity.meal.MealImageEntity;
 import com.example.diet.model.meal.MealImageParam;
@@ -22,10 +29,11 @@ import com.example.diet.repository.file.FileRepository;
 import com.example.diet.repository.meal.MealImageRepository;
 import com.example.diet.repository.meal.MealRepository;
 import com.example.diet.service.BaseService;
+import com.example.diet.service.meal.validation.MealValidation;
 
 @Service
 public class MealRegisterService implements
-    BaseService<MealRegisterRequest, MealRegisterResponse> {
+    BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> {
 
     private final MealRepository mealRepository;
 
@@ -47,8 +55,53 @@ public class MealRegisterService implements
     }
 
     @Override
-    public Boolean validation(MealRegisterRequest value) {
-        return true;
+    public List<ValidationErrResponse> validation(MealRegisterRequest value) {
+        List<ValidationErrResponse> errorInfos = new ArrayList<>();
+
+        ValidateErrRet errRet = MealValidation
+            .checkMealType(value.getMealType(), true);
+        if (errRet != null) {
+            ValidationErrResponse errorInfo = new ValidationErrResponse();
+            errorInfo
+                .setMessage(MealValidationErrMsg.MealType.getMessage(errRet));
+            errorInfo.setSchema(RequestItem.Meal.MEAL_TYPE.getSchema());
+            errorInfos.add(errorInfo);
+        }
+
+        errRet = MealValidation.checkCalorie(value.getCalorie(), true);
+        if (errRet != null) {
+            ValidationErrResponse errorInfo = new ValidationErrResponse();
+            errorInfo
+                .setMessage(MealValidationErrMsg.Calorie.getMessage(errRet));
+            errorInfo.setSchema(RequestItem.Meal.CALORIE.getSchema());
+            errorInfos.add(errorInfo);
+        }
+
+        errRet = MealValidation.checkComment(value.getComment());
+        if (errRet != null) {
+            ValidationErrResponse errorInfo = new ValidationErrResponse();
+            errorInfo
+                .setMessage(MealValidationErrMsg.Comment.getMessage(errRet));
+            errorInfo.setSchema(RequestItem.Meal.COMMENT.getSchema());
+            errorInfos.add(errorInfo);
+        }
+
+        Triple<ValidateErrRet, String, Integer> mealImageCheckRet = MealValidation
+            .checkMealImage(value.getMealImageFiles());
+        if (mealImageCheckRet != null) {
+            errRet = mealImageCheckRet.getLeft();
+            String fileName = mealImageCheckRet.getMiddle();
+            Integer fileIdx = mealImageCheckRet.getRight();
+            ValidationErrResponse errorInfo = new ValidationErrResponse();
+            errorInfo
+                .setMessage(MealValidationErrMsg.MealImage.getMessage(errRet)
+                    + "\nファイル名：" + fileName);
+            errorInfo.setSchema(RequestItem.Meal.MEAL_IMAGE_FILE.getSchema()
+                + String.format(FormatDefine.LIST_INDEX_FORMAT, fileIdx));
+            errorInfos.add(errorInfo);
+        }
+
+        return errorInfos;
     }
 
     @Override
@@ -70,8 +123,8 @@ public class MealRegisterService implements
 
         MealParam param = new MealParam();
 
-        param.setMealType(value.getMealType());
-        param.setCalorie(value.getCalorie());
+        param.setMealType(Integer.parseInt(value.getMealType()));
+        param.setCalorie(Integer.parseInt(value.getCalorie()));
         param.setComment(value.getComment());
         param.setUserId(userId);
 

@@ -1,14 +1,14 @@
 package com.example.diet.service;
 
-public interface BaseService<T, V> {
+public interface BaseService<T, V, S> {
 
     /**
      * バリデーションチェック
      * 
      * @param value リクエスト値
-     * @return チェック結果 true：エラーなし false：エラーあり
+     * @return チェック結果
      */
-    Boolean validation(T value);
+    S validation(T value);
 
     /**
      * Service処理

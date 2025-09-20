@@ -11,7 +11,7 @@ public class MealParam {
 
     private Integer mealType;
 
-    private Float calorie;
+    private Integer calorie;
 
     private String comment;
 

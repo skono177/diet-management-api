@@ -13,9 +13,9 @@ import lombok.Data;
 // @formatter:on
 public class MealRegisterRequest {
 
-    private Integer mealType;
+    private String mealType;
 
-    private Float calorie;
+    private String calorie;
 
     private String comment;
 

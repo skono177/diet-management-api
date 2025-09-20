@@ -7,12 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.utils.UserUtils;
-import com.example.diet.model.meal.register.MealRegisterRequestModel;
-import com.example.diet.model.meal.register.MealRegisterResponseModel;
+import com.example.diet.model.meal.register.MealRegisterRequest;
+import com.example.diet.model.meal.register.MealRegisterResponse;
 import com.example.diet.service.BaseService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,36 +29,41 @@ public class MealController {
 
     private final Logger logger = LogManager.getLogger(MealController.class);
 
-    private final BaseService<MealRegisterRequestModel, MealRegisterResponseModel> registerMealService;
+    private final BaseService<MealRegisterRequest, MealRegisterResponse> registerMealService;
 
     public MealController(
-        BaseService<MealRegisterRequestModel, MealRegisterResponseModel> registerMealService) {
+        BaseService<MealRegisterRequest, MealRegisterResponse> registerMealService) {
         this.registerMealService = registerMealService;
 
     }
 
     @PostMapping
-    public MealRegisterResponseModel registerMeal(
+    public MealRegisterResponse registerMeal(
         HttpServletRequest request,
         HttpServletResponse response,
         @RequestParam(name = "meal_type", required = false) Integer mealType,
         @RequestParam(required = false) Float calorie,
         @RequestParam(required = false) String comment,
-        @RequestParam(name = "meal_image_file", required = false) MultipartFile mealImageFile) {
+        @RequestParam(name = "meal_image_file", required = false) List<MultipartFile> mealImageFiles) {
 
-        MealRegisterRequestModel requestModel = new MealRegisterRequestModel(
+        MealRegisterRequest requestModel = new MealRegisterRequest(
             mealType,
             calorie,
             comment,
-            mealImageFile);
+            mealImageFiles);
         if (registerMealService.validation(requestModel) == false) {
 
         }
 
         String userId = UserUtils.getUserId("");
 
-        MealRegisterResponseModel responseModel = registerMealService
-            .execute(userId, requestModel);
+        MealRegisterResponse responseModel = null;
+        try {
+            responseModel = registerMealService.execute(userId, requestModel);
+        } catch (Exception e) {
+            response.setStatus(500);
+            return null;
+        }
 
         logger.info(calorie);
         return responseModel;

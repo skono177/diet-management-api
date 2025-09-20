@@ -14,9 +14,9 @@ public interface BaseService<T, V> {
      * Service処理
      * 
      * @param userId ユーザID
-     * @param value  リクエスト値
+     * @param value リクエスト値
      * @return 処理結果
      */
-    V execute(String userId, T value);
+    V execute(String userId, T value) throws Exception;
 
 }

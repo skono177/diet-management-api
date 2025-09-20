@@ -1,11 +1,17 @@
 package com.example.diet.model.meal.register;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+// @formatter:off
 @Data
-public class MealRegisterParamModel {
+@AllArgsConstructor
+// @formatter:on
+public class MealRegisterRequest {
 
     private Integer mealType;
 
@@ -13,5 +19,5 @@ public class MealRegisterParamModel {
 
     private String comment;
 
-    private MultipartFile mealImageFile;
+    private List<MultipartFile> mealImageFiles;
 }

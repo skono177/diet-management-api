@@ -1,78 +1,116 @@
 package com.example.diet.service.meal.register;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.example.diet.entity.MealEntity;
-import com.example.diet.model.meal.register.MealRegisterParamModel;
-import com.example.diet.model.meal.register.MealRegisterRequestModel;
-import com.example.diet.model.meal.register.MealRegisterResponseModel;
-import com.example.diet.repository.MealRepository;
+import com.example.diet.common.utils.CommonUtils;
+import com.example.diet.entity.meal.MealEntity;
+import com.example.diet.entity.meal.MealImageEntity;
+import com.example.diet.model.meal.MealImageParam;
+import com.example.diet.model.meal.MealParam;
+import com.example.diet.model.meal.register.MealRegisterRequest;
+import com.example.diet.model.meal.register.MealRegisterResponse;
+import com.example.diet.repository.file.FileRepository;
+import com.example.diet.repository.meal.MealImageRepository;
+import com.example.diet.repository.meal.MealRepository;
 import com.example.diet.service.BaseService;
 
 @Service
 public class MealRegisterService implements
-    BaseService<MealRegisterRequestModel, MealRegisterResponseModel> {
+    BaseService<MealRegisterRequest, MealRegisterResponse> {
 
     private final MealRepository mealRepository;
+
+    private final MealImageRepository mealImageRepository;
+
+    private final FileRepository fileRepository;
+
     private final PlatformTransactionManager tManager;
 
-    public MealRegisterService(MealRepository mealRepository,
+    public MealRegisterService(
+        MealRepository mealRepository,
+        MealImageRepository mealImageRepository,
+        @Qualifier("fileRepositoryLocalImpl") FileRepository fileRepository,
         PlatformTransactionManager tManager) {
         this.mealRepository = mealRepository;
+        this.mealImageRepository = mealImageRepository;
+        this.fileRepository = fileRepository;
         this.tManager = tManager;
     }
 
     @Override
-    public Boolean validation(MealRegisterRequestModel value) {
+    public Boolean validation(MealRegisterRequest value) {
         return true;
     }
 
     @Override
-    public MealRegisterResponseModel execute(String userId,
-        MealRegisterRequestModel value) {
+    public MealRegisterResponse execute(String userId,
+        MealRegisterRequest value) throws Exception {
 
-        MealRegisterParamModel param = createParam(value);
+        MealParam param = createParam(userId, value);
         LocalDateTime now = LocalDateTime.now();
 
         Integer mealId = createMeal(param, now);
 
-        MealRegisterResponseModel response = new MealRegisterResponseModel();
+        MealRegisterResponse response = new MealRegisterResponse();
         response.setMealId(mealId);
 
         return response;
     }
 
-    private MealRegisterParamModel createParam(MealRegisterRequestModel value) {
+    private MealParam createParam(String userId, MealRegisterRequest value) {
 
-        MealRegisterParamModel param = new MealRegisterParamModel();
+        MealParam param = new MealParam();
 
         param.setMealType(value.getMealType());
         param.setCalorie(value.getCalorie());
         param.setComment(value.getComment());
-        param.setMealImageFile(value.getMealImageFile());
+        param.setUserId(userId);
+
+        if (value.getMealImageFiles() != null) {
+            List<MealImageParam> mealImageParams = new ArrayList<MealImageParam>();
+            value.getMealImageFiles().forEach(mImgFile -> {
+                MealImageParam mealImageParam = new MealImageParam();
+                mealImageParam.setMealImageFile(mImgFile);
+                mealImageParam.setMealImageFileName(mImgFile.getName());
+                mealImageParam.setUserId(userId);
+                mealImageParams.add(mealImageParam);
+            });
+            param.setMealImageParams(mealImageParams);
+        }
 
         return param;
     }
 
     private Integer createMeal(
-        MealRegisterParamModel param,
-        LocalDateTime now) {
+        MealParam param,
+        LocalDateTime now) throws Exception {
         // トランザクション定義
         TransactionDefinition def = new DefaultTransactionDefinition();
         TransactionStatus status = tManager.getTransaction(def);
 
         try {
             MealEntity meal = createMealEntity(param, now);
-            MealEntity saved = mealRepository.save(meal);
+            MealEntity savedMeal = mealRepository.save(meal);
+
+            if (param.getMealImageParams() != null) {
+                createMealImage(
+                    param.getMealImageParams(),
+                    savedMeal.getMealId(),
+                    now);
+            }
+
             // 正常終了 → コミット
             tManager.commit(status);
-            return saved.getMealId();
+            return savedMeal.getMealId();
         } catch (Exception ex) {
             // エラー発生 → ロールバック
             tManager.rollback(status);
@@ -81,18 +119,58 @@ public class MealRegisterService implements
     }
 
     private MealEntity createMealEntity(
-        MealRegisterParamModel param,
+        MealParam param,
         LocalDateTime now) {
         MealEntity entity = new MealEntity(
             null,
-            "null",
+            param.getUserId(),
             now.toLocalDate(),
             param.getMealType(),
             param.getCalorie(),
             param.getComment(),
-            "null",
+            param.getUserId(),
             now,
-            "null",
+            param.getUserId(),
+            now,
+            0);
+        return entity;
+
+    }
+
+    private void createMealImage(
+        List<MealImageParam> mealImageParams,
+        Integer mealId,
+        LocalDateTime now) throws Exception {
+
+        for (MealImageParam imageParam : mealImageParams) {
+            MealImageEntity mealImage = createMealImageEntity(
+                imageParam, mealId, now);
+            MealImageEntity savedMealImage = mealImageRepository
+                .save(mealImage);
+
+            String filePath = CommonUtils.createMealImagePath(mealId,
+                savedMealImage.getMealImageId());
+            fileRepository.upload(imageParam.getMealImageFile(), filePath);
+
+            savedMealImage.setFilePath(filePath);
+            savedMealImage.setFileName(imageParam.getMealImageFileName());
+            mealImageRepository.save(savedMealImage);
+        }
+
+    }
+
+    private MealImageEntity createMealImageEntity(
+        MealImageParam param,
+        Integer mealId,
+        LocalDateTime now) {
+        MealImageEntity entity = new MealImageEntity(
+            null,
+            mealId,
+            null,
+            null,
+            param.getUserId(),
+            now,
+            param.getUserId(),
             now,
             0);
         return entity;

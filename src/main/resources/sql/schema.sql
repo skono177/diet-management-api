@@ -1,5 +1,5 @@
 -- Project Name : Diet
--- Date/Time    : 2025/09/13 20:36:40
+-- Date/Time    : 2025/09/15 23:41:44
 -- Author       : S.Kono
 -- RDBMS Type   : PostgreSQL
 -- Application  : A5:SQL Mk-2
@@ -17,7 +17,7 @@ create schema diet;
 
 -- ユーザーテーブル
 -- * RestoreFromTempTable
-create table diet.t_mealt_user (
+create table diet.t_user (
   meal_id INT not null
   , register_by CHAR(36)
   , register_date DATE
@@ -29,20 +29,22 @@ create table diet.t_mealt_user (
   , updated_by CHAR(36) not null
   , updated_at DATETIME not null
   , deleted INT not null
-  , constraint t_mealt_user_PKC primary key (meal_id)
+  , constraint t_user_PKC primary key (meal_id)
 ) ;
 
 -- 食事画像テーブル
 -- * RestoreFromTempTable
-create table diet.t_mealt_meal_image (
+create table diet.t_meal_image (
   meal_image_id INT not null
   , meal_id INT not null
+  , file_path VARCHAR(100)
+  , file_name VARCHAR(20)
   , created_by CHAR(36) not null
   , created_at DATETIME not null
   , updated_by CHAR(36) not null
   , updated_at DATETIME not null
   , deleted INT not null
-  , constraint t_mealt_meal_image_PKC primary key (meal_image_id,meal_id)
+  , constraint t_meal_image_PKC primary key (meal_image_id)
 ) ;
 
 -- 食事テーブル
@@ -62,30 +64,32 @@ create table diet.t_meal (
   , constraint t_meal_PKC primary key (meal_id)
 ) ;
 
-alter table diet.t_mealt_meal_image
-  add constraint t_mealt_meal_image_FK1 foreign key (meal_id) references diet.t_meal(meal_id);
+alter table diet.t_meal_image
+  add constraint t_meal_image_FK1 foreign key (meal_id) references diet.t_meal(meal_id);
 
-comment on table diet.t_mealt_user is 'ユーザーテーブル';
-comment on column diet.t_mealt_user.meal_id is '食事ID';
-comment on column diet.t_mealt_user.register_by is '登録者';
-comment on column diet.t_mealt_user.register_date is '登録日';
-comment on column diet.t_mealt_user.meal_type is '食事種別';
-comment on column diet.t_mealt_user.calorie is 'カロリー';
-comment on column diet.t_mealt_user.comment is 'コメント';
-comment on column diet.t_mealt_user.created_by is '作成者ID';
-comment on column diet.t_mealt_user.created_at is '作成日時';
-comment on column diet.t_mealt_user.updated_by is '更新者ID';
-comment on column diet.t_mealt_user.updated_at is '更新日時';
-comment on column diet.t_mealt_user.deleted is '削除フラグ';
+comment on table diet.t_user is 'ユーザーテーブル';
+comment on column diet.t_user.meal_id is '食事ID';
+comment on column diet.t_user.register_by is '登録者';
+comment on column diet.t_user.register_date is '登録日';
+comment on column diet.t_user.meal_type is '食事種別';
+comment on column diet.t_user.calorie is 'カロリー';
+comment on column diet.t_user.comment is 'コメント';
+comment on column diet.t_user.created_by is '作成者ID';
+comment on column diet.t_user.created_at is '作成日時';
+comment on column diet.t_user.updated_by is '更新者ID';
+comment on column diet.t_user.updated_at is '更新日時';
+comment on column diet.t_user.deleted is '削除フラグ';
 
-comment on table diet.t_mealt_meal_image is '食事画像テーブル';
-comment on column diet.t_mealt_meal_image.meal_image_id is '食事画像ID';
-comment on column diet.t_mealt_meal_image.meal_id is '食事ID';
-comment on column diet.t_mealt_meal_image.created_by is '作成者ID';
-comment on column diet.t_mealt_meal_image.created_at is '作成日時';
-comment on column diet.t_mealt_meal_image.updated_by is '更新者ID';
-comment on column diet.t_mealt_meal_image.updated_at is '更新日時';
-comment on column diet.t_mealt_meal_image.deleted is '削除フラグ';
+comment on table diet.t_meal_image is '食事画像テーブル';
+comment on column diet.t_meal_image.meal_image_id is '食事画像ID';
+comment on column diet.t_meal_image.meal_id is '食事ID';
+comment on column diet.t_meal_image.file_path is 'ファイルパス';
+comment on column diet.t_meal_image.file_name is 'ファイル名';
+comment on column diet.t_meal_image.created_by is '作成者ID';
+comment on column diet.t_meal_image.created_at is '作成日時';
+comment on column diet.t_meal_image.updated_by is '更新者ID';
+comment on column diet.t_meal_image.updated_at is '更新日時';
+comment on column diet.t_meal_image.deleted is '削除フラグ';
 
 comment on table diet.t_meal is '食事テーブル';
 comment on column diet.t_meal.meal_id is '食事ID';

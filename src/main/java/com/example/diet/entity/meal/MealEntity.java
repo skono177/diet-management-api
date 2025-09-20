@@ -1,4 +1,4 @@
-package com.example.diet.entity;
+package com.example.diet.entity.meal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +26,8 @@ public class MealEntity {
 
     // @formatter:off
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "meal_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "meal_id")
     // @formatter:on
     private Integer mealId;
 

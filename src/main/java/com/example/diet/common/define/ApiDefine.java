@@ -124,7 +124,7 @@ public class ApiDefine {
 
         public static MealImageExt fromValue(String value) {
             for (MealImageExt ext : MealImageExt.values()) {
-                if (ext.value == value) {
+                if (value.endsWith(ext.value)) {
                     return ext;
                 }
             }

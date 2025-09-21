@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -42,6 +43,9 @@ public class MealRegisterService implements
     private final FileRepository fileRepository;
 
     private final PlatformTransactionManager tManager;
+
+    private final Logger logger = LogManager
+        .getLogger(MealRegisterService.class);
 
     public MealRegisterService(
         MealRepository mealRepository,
@@ -133,7 +137,8 @@ public class MealRegisterService implements
             value.getMealImageFiles().forEach(mImgFile -> {
                 MealImageParam mealImageParam = new MealImageParam();
                 mealImageParam.setMealImageFile(mImgFile);
-                mealImageParam.setMealImageFileName(mImgFile.getName());
+                mealImageParam
+                    .setMealImageFileName(mImgFile.getOriginalFilename());
                 mealImageParam.setUserId(userId);
                 mealImageParams.add(mealImageParam);
             });
@@ -165,6 +170,7 @@ public class MealRegisterService implements
             tManager.commit(status);
             return savedMeal.getMealId();
         } catch (Exception ex) {
+            logger.error(ex.getMessage());
             // エラー発生 → ロールバック
             tManager.rollback(status);
             throw ex;

@@ -7,9 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.utils.UserUtils;
-import com.example.diet.dto.validation.ValidationErrResponse;
 import com.example.diet.model.meal.register.MealRegisterRequest;
 import com.example.diet.model.meal.register.MealRegisterResponse;
+import com.example.diet.model.validation.ValidationErrResponse;
 import com.example.diet.service.BaseService;
 
 import jakarta.servlet.http.HttpServletRequest;

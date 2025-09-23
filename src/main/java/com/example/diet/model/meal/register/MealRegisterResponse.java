@@ -2,7 +2,7 @@ package com.example.diet.model.meal.register;
 
 import java.util.List;
 
-import com.example.diet.dto.validation.ValidationErrResponse;
+import com.example.diet.model.validation.ValidationErrResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

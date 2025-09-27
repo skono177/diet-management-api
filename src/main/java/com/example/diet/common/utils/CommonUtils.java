@@ -1,5 +1,7 @@
 package com.example.diet.common.utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.example.diet.common.define.FormatDefine;
@@ -27,5 +29,15 @@ public class CommonUtils {
             }
         }
         return ret.toString();
+    }
+
+    public static String DateTimeToStr(LocalDate date) {
+        return date
+            .format(DateTimeFormatter.ofPattern(FormatDefine.DATE_FORMAT));
+    }
+
+    public static LocalDate StrToDateTime(String dateTime) {
+        return LocalDate.parse(dateTime,
+            DateTimeFormatter.ofPattern(FormatDefine.DATE_FORMAT));
     }
 }

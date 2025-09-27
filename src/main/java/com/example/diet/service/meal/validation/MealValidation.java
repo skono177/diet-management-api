@@ -1,11 +1,13 @@
 package com.example.diet.service.meal.validation;
 
+import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.define.ApiDefine.MealImageExt;
 import com.example.diet.common.define.ApiDefine.MealType;
 import com.example.diet.common.define.ApiDefine.ParamSize;
 import com.example.diet.common.define.ApiDefine.ValidateErrRet;
 import com.example.diet.common.utils.ValidationUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -16,6 +18,23 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.web.multipart.MultipartFile;
 
 public class MealValidation {
+
+    public static ValidateErrRet checkMealTypeList(String mealTypes) {
+
+        if (StringUtils.isEmpty(mealTypes)) {
+            return null;
+        }
+
+        List<String> mealTypeList = Arrays
+            .asList(mealTypes.split(ApiDefine.SEARCH_PARAM_SPLIT_KEYWORD));
+        for (String mealType : mealTypeList) {
+            ValidateErrRet err = checkMealType(mealType, false);
+            if (err != null) {
+                return err;
+            }
+        }
+        return null;
+    }
 
     public static ValidateErrRet checkMealType(String mealType,
         boolean required) {
@@ -36,6 +55,18 @@ public class MealValidation {
             return ValidateErrRet.FORMAT;
         }
 
+        return null;
+    }
+
+    public static ValidateErrRet checkRegisterDate(
+        String registerDate) {
+        if (StringUtils.isEmpty(registerDate)) {
+            return null;
+        }
+
+        if (ValidationUtils.checkDate(registerDate) == null) {
+            return ValidateErrRet.FORMAT;
+        }
         return null;
     }
 

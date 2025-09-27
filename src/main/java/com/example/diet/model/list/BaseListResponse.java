@@ -1,4 +1,4 @@
-package com.example.diet.model.meal.register;
+package com.example.diet.model.list;
 
 import java.util.List;
 
@@ -12,10 +12,22 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 // @formatter:on
-public class MealRegisterResponse {
+public class BaseListResponse<T> {
 
-    @JsonProperty("meal_id")
-    private Integer mealId;
+    @JsonProperty("total_elements")
+    private Long totalElements;
+
+    @JsonProperty("total_pages")
+    private Long totalPages;
+
+    @JsonProperty("page_size")
+    private Long pageSize;
+
+    @JsonProperty("page_number")
+    private Long pageNumber;
+
+    @JsonProperty("items")
+    private List<T> items;
 
     @JsonProperty("errors")
     private List<ValidationErrResponse> errors;

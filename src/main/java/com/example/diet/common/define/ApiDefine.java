@@ -7,11 +7,35 @@ public class ApiDefine {
 
     public static final String API_BASE = "/api/";
     public static final String JP_COMMA = "、";
+    public static final String SEARCH_PARAM_SPLIT_KEYWORD = ",";
 
     public static class RequestItem {
 
+        public static enum SearchCommon {
+            PAGE_SIZE("page_size", "1ページ当たりの件数"),
+            PAGE_NUMBER("page_number", "ページ番号");
+
+            private final String schema;
+            private final String itemName;
+
+            private SearchCommon(String schema, String itemName) {
+                this.schema = schema;
+                this.itemName = itemName;
+            }
+
+            public String getSchema() {
+                return schema;
+            }
+
+            public String getItemName() {
+                return itemName;
+            }
+        }
+
         public static enum Meal {
             MEAL_TYPE("meal_type", "食事種別"),
+            REGISTER_DATE_FROM("register_date_from", "登録日（from）"),
+            REGISTER_DATE_TO("register_date_to", "登録日（to）"),
             CALORIE("calorie", "カロリー"),
             COMMENT("comment", "コメント"),
             MEAL_IMAGE_FILE("meal_image_file", "食事画像");
@@ -40,14 +64,17 @@ public class ApiDefine {
         MAX_SIZE,
         MIN_SIZE,
         FORMAT,
-        DUPLICATE;
+        DUPLICATE,
+        CORRELATION;
     }
 
     public static enum ParamSize {
 
         CALORIE(9999, 0),
         MEAL_COMMENT(100, 0),
-        MEAL_IMAGE_NUM(10, 0);
+        MEAL_IMAGE_NUM(10, 0),
+        PAGE_SIZE(1000, 50),
+        PAGE_NUMBER(1000, 0);
 
         private final Integer maxValue;
         private final Integer minValue;

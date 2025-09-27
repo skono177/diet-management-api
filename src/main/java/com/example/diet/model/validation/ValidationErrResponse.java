@@ -1,4 +1,4 @@
-package com.example.diet.dto.validation;
+package com.example.diet.model.validation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

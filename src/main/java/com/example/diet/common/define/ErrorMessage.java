@@ -10,13 +10,79 @@ import com.example.diet.common.utils.CommonUtils;
 
 public class ErrorMessage {
 
-    public static class MealValidationErrMsg {
+    public static class CommonValidationErrMsg {
 
         private static final String REQUIRED_MSG = "%sは必須です。";
-        private static final String NUMBER_SIZE_MSG = "%sには%d～%dの整数を設定してください。";
         private static final String STRING_MAX_LENGS_MSG = "%sは%d文字以下で入力してください。";
         private static final String FORMAT_MSG = "%sは%sの中から設定してください。";
+        private static final String DATE_FORMAT_MSG = "%sは"
+            + FormatDefine.DATE_FORMAT + "の形式で設定してください。";
+        private static final String DATE_CORRELATION_MSG = "%sは%s以前の日付で設定してください。";
+        private static final String NUMBER_SIZE_MSG = "%sには%d～%dの整数を設定してください。";
         private static final String UNKNOWN_ERR_MSG = "不明なエラーです。";
+
+    }
+
+    public static class SearchValidationErrMsg {
+
+        public static class PageSize {
+
+            private static final String ITEM_NAME = RequestItem.SearchCommon.PAGE_SIZE
+                .getItemName();
+
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_SIZE.getMinValue(),
+                    ParamSize.PAGE_SIZE.getMaxValue()),
+                ValidateErrRet.MAX_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_SIZE.getMinValue(),
+                    ParamSize.PAGE_SIZE.getMaxValue()),
+                ValidateErrRet.MIN_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_SIZE.getMinValue(),
+                    ParamSize.PAGE_SIZE.getMaxValue()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
+            }
+        }
+
+        public static class PageNumber {
+
+            private static final String ITEM_NAME = RequestItem.SearchCommon.PAGE_NUMBER
+                .getItemName();
+
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_NUMBER.getMinValue(),
+                    ParamSize.PAGE_NUMBER.getMaxValue()),
+                ValidateErrRet.MAX_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_NUMBER.getMinValue(),
+                    ParamSize.PAGE_NUMBER.getMaxValue()),
+                ValidateErrRet.MIN_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_NUMBER.getMinValue(),
+                    ParamSize.PAGE_NUMBER.getMaxValue()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
+            }
+        }
+    }
+
+    public static class MealValidationErrMsg {
 
         public static class MealType {
 
@@ -24,18 +90,57 @@ public class ErrorMessage {
                 .getItemName();
 
             private static final Map<ValidateErrRet, String> messages = Map.of(
-                ValidateErrRet.REQUIRED, String.format(REQUIRED_MSG, ITEM_NAME),
+                ValidateErrRet.REQUIRED,
+                String.format(CommonValidationErrMsg.REQUIRED_MSG,
+                    ITEM_NAME),
                 ValidateErrRet.TYPE,
-                String.format(FORMAT_MSG, ITEM_NAME,
+                String.format(CommonValidationErrMsg.FORMAT_MSG, ITEM_NAME,
                     CommonUtils.connectStr(ApiDefine.JP_COMMA,
                         ApiDefine.MealType.getLabels())),
                 ValidateErrRet.FORMAT,
-                String.format(FORMAT_MSG, ITEM_NAME,
+                String.format(CommonValidationErrMsg.FORMAT_MSG, ITEM_NAME,
                     CommonUtils.connectStr(ApiDefine.JP_COMMA,
                         ApiDefine.MealType.getLabels())));
 
             public static String getMessage(ValidateErrRet err) {
-                return messages.getOrDefault(err, UNKNOWN_ERR_MSG);
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
+            }
+        }
+
+        public static class RegisterDateFrom {
+
+            private static final String ITEM_NAME_FROM = RequestItem.Meal.REGISTER_DATE_FROM
+                .getItemName();
+
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.FORMAT,
+                String.format(CommonValidationErrMsg.DATE_FORMAT_MSG,
+                    ITEM_NAME_FROM),
+                ValidateErrRet.CORRELATION,
+                String.format(CommonValidationErrMsg.DATE_CORRELATION_MSG,
+                    ITEM_NAME_FROM,
+                    RequestItem.Meal.REGISTER_DATE_TO.getItemName()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
+            }
+        }
+
+        public static class RegisterDateTo {
+
+            private static final String ITEM_NAME_TO = RequestItem.Meal.REGISTER_DATE_FROM
+                .getItemName();
+
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.FORMAT,
+                String.format(CommonValidationErrMsg.DATE_FORMAT_MSG,
+                    ITEM_NAME_TO));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
@@ -45,22 +150,28 @@ public class ErrorMessage {
                 .getItemName();
 
             private static final Map<ValidateErrRet, String> messages = Map.of(
-                ValidateErrRet.REQUIRED, String.format(REQUIRED_MSG, ITEM_NAME),
+                ValidateErrRet.REQUIRED,
+                String.format(CommonValidationErrMsg.REQUIRED_MSG,
+                    ITEM_NAME),
                 ValidateErrRet.TYPE,
-                String.format(NUMBER_SIZE_MSG, ITEM_NAME,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
                     ParamSize.CALORIE.getMinValue(),
                     ParamSize.CALORIE.getMaxValue()),
                 ValidateErrRet.MAX_SIZE,
-                String.format(NUMBER_SIZE_MSG, ITEM_NAME,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
                     ParamSize.CALORIE.getMinValue(),
                     ParamSize.CALORIE.getMaxValue()),
                 ValidateErrRet.MIN_SIZE,
-                String.format(NUMBER_SIZE_MSG, ITEM_NAME,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
                     ParamSize.CALORIE.getMinValue(),
                     ParamSize.CALORIE.getMaxValue()));
 
             public static String getMessage(ValidateErrRet err) {
-                return messages.getOrDefault(err, UNKNOWN_ERR_MSG);
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
@@ -71,11 +182,13 @@ public class ErrorMessage {
 
             private static final Map<ValidateErrRet, String> messages = Map.of(
                 ValidateErrRet.MAX_SIZE,
-                String.format(STRING_MAX_LENGS_MSG, ITEM_NAME,
+                String.format(CommonValidationErrMsg.STRING_MAX_LENGS_MSG,
+                    ITEM_NAME,
                     ParamSize.CALORIE.getMinValue()));
 
             public static String getMessage(ValidateErrRet err) {
-                return messages.getOrDefault(err, UNKNOWN_ERR_MSG);
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
@@ -93,7 +206,8 @@ public class ErrorMessage {
                 ValidateErrRet.DUPLICATE, ITEM_NAME + "のファイル名が重複しています。");
 
             public static String getMessage(ValidateErrRet err) {
-                return messages.getOrDefault(err, UNKNOWN_ERR_MSG);
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
     }

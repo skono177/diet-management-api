@@ -14,4 +14,9 @@
     "editor.formatOnSave": true,
   },
   "java.format.enabled": true,
+  "java.project.sourcePaths": [
+    "src/main/java",
+    "build/generated/sources/annotationProcessor/java/main"
+  ],
+  "java.compile.nullAnalysis.mode": "automatic"
 }

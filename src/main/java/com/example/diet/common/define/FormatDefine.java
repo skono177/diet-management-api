@@ -8,4 +8,6 @@ public class FormatDefine {
         + "/%d/%d";
 
     public static final String LIST_INDEX_FORMAT = "[%d]";
+
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 }

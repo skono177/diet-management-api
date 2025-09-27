@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.utils.UserUtils;
+import com.example.diet.model.list.BaseListResponse;
+import com.example.diet.model.meal.get.list.MealListGetRequest;
+import com.example.diet.model.meal.get.list.MealListGetResponse;
 import com.example.diet.model.meal.register.MealRegisterRequest;
 import com.example.diet.model.meal.register.MealRegisterResponse;
 import com.example.diet.model.validation.ValidationErrResponse;
@@ -32,10 +35,13 @@ public class MealController {
 
     private final BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService;
 
-    public MealController(
-        BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService) {
-        this.registerMealService = registerMealService;
+    private final BaseService<MealListGetRequest, BaseListResponse<MealListGetResponse>, List<ValidationErrResponse>> getListMealService;
 
+    public MealController(
+        BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService,
+        BaseService<MealListGetRequest, BaseListResponse<MealListGetResponse>, List<ValidationErrResponse>> getListMealService) {
+        this.registerMealService = registerMealService;
+        this.getListMealService = getListMealService;
     }
 
     @PostMapping
@@ -62,7 +68,7 @@ public class MealController {
             return responseModel;
         }
 
-        String userId = UserUtils.getUserId("");
+        String userId = UserUtils.getUserId("12345");
 
         try {
             responseModel = registerMealService.execute(userId, requestModel);
@@ -75,10 +81,44 @@ public class MealController {
         return responseModel;
     }
 
-    @GetMapping("list")
-    public String getMealList(@RequestParam(required = false) String param) {
-        logger.info("12345");
-        return new String("meal_list");
+    @GetMapping
+    public BaseListResponse<MealListGetResponse> getMealList(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        @RequestParam(name = "meal_type", required = false) String mealType,
+        @RequestParam(name = "register_date_from", required = false) String registerDateFrom,
+        @RequestParam(name = "register_date_to", required = false) String registerDateTo,
+        @RequestParam(name = "page_size", required = false) String pageSize,
+        @RequestParam(name = "page_number", required = false) String pageNumber) {
+
+        MealListGetRequest requestModel = new MealListGetRequest();
+        requestModel.setMealType(mealType);
+        requestModel.setRegisterDateFrom(registerDateFrom);
+        requestModel.setRegisterDateTo(registerDateTo);
+        requestModel.setPageSize(pageSize);
+        requestModel.setPageNumber(pageNumber);
+
+        BaseListResponse<MealListGetResponse> responseModel = new BaseListResponse<>();
+        List<ValidationErrResponse> validationRets = getListMealService
+            .validation(requestModel);
+        if (validationRets.size() > 0) {
+            response.setStatus(400);
+            responseModel.setErrors(validationRets);
+            return responseModel;
+        }
+        String userId = UserUtils.getUserId("12345");
+
+        try {
+            responseModel = getListMealService.execute(userId, requestModel);
+            if (responseModel == null) {
+                response.setStatus(500);
+                return null;
+            }
+        } catch (Exception e) {
+            response.setStatus(500);
+            return null;
+        }
+        return responseModel;
     }
 
     @GetMapping("detail")

@@ -117,8 +117,11 @@ public class MealValidation {
         Set<String> fileNames = new HashSet<>();
         Integer fileIdx = 0;
         for (MultipartFile file : mealImageFiles) {
-            String lowerName = file.getOriginalFilename()
-                .toLowerCase(Locale.ROOT);
+            String fileName = file.getOriginalFilename();
+            if (fileName == null) {
+                continue;
+            }
+            String lowerName = fileName.toLowerCase(Locale.ROOT);
             if (MealImageExt.fromValue(lowerName) == null) {
                 return Triple.of(ValidateErrRet.FORMAT, lowerName, fileIdx);
             }

@@ -33,6 +33,10 @@ public class MealRepositoryImpl implements MealRepositoryCustom {
         return queryFactory
             .selectFrom(meal)
             .where(builder)
+            .offset(SearchUtils.convertSearchOffset(
+                searchParam.getPageSize(),
+                searchParam.getPageNumber()))
+            .limit(searchParam.getPageSize())
             .fetch();
     }
 
@@ -48,10 +52,6 @@ public class MealRepositoryImpl implements MealRepositoryCustom {
             .select(meal.count())
             .from(meal)
             .where(builder)
-            .offset(SearchUtils.convertSearchOffset(
-                searchParam.getPageSize(),
-                searchParam.getPageNumber()))
-            .limit(searchParam.getPageSize())
             .fetchOne();
     }
 

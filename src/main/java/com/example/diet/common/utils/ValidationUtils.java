@@ -42,7 +42,7 @@ public class ValidationUtils {
         LocalDate from = CommonUtils.StrToDateTime(fromStr);
         LocalDate to = CommonUtils.StrToDateTime(toStr);
 
-        if (from.isAfter(to) == false) {
+        if (from.isAfter(to)) {
             return ValidateErrRet.CORRELATION;
         }
         return null;

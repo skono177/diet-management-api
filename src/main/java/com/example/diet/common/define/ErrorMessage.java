@@ -23,175 +23,191 @@ public class ErrorMessage {
 
     }
 
-    public static class BaseErrMsg {
-        protected static Map<ValidateErrRet, String> messages;
-
-        public static String getMessage(ValidateErrRet err) {
-            return messages.getOrDefault(err,
-                CommonValidationErrMsg.UNKNOWN_ERR_MSG);
-        }
-    }
-
     public static class SearchValidationErrMsg {
 
-        public static class PageSize extends BaseErrMsg {
+        public static class PageSize {
 
             private static final String ITEM_NAME = RequestItem.SearchCommon.PAGE_SIZE
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.TYPE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.PAGE_SIZE.getMinValue(),
-                        ParamSize.PAGE_SIZE.getMaxValue()),
-                    ValidateErrRet.MAX_SIZE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.PAGE_SIZE.getMinValue(),
-                        ParamSize.PAGE_SIZE.getMaxValue()),
-                    ValidateErrRet.MIN_SIZE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.PAGE_SIZE.getMinValue(),
-                        ParamSize.PAGE_SIZE.getMaxValue()));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_SIZE.getMinValue(),
+                    ParamSize.PAGE_SIZE.getMaxValue()),
+                ValidateErrRet.MAX_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_SIZE.getMinValue(),
+                    ParamSize.PAGE_SIZE.getMaxValue()),
+                ValidateErrRet.MIN_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_SIZE.getMinValue(),
+                    ParamSize.PAGE_SIZE.getMaxValue()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
-        public static class PageNumber extends BaseErrMsg {
+        public static class PageNumber {
 
             private static final String ITEM_NAME = RequestItem.SearchCommon.PAGE_NUMBER
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.TYPE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.PAGE_NUMBER.getMinValue(),
-                        ParamSize.PAGE_NUMBER.getMaxValue()),
-                    ValidateErrRet.MAX_SIZE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.PAGE_NUMBER.getMinValue(),
-                        ParamSize.PAGE_NUMBER.getMaxValue()),
-                    ValidateErrRet.MIN_SIZE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.PAGE_NUMBER.getMinValue(),
-                        ParamSize.PAGE_NUMBER.getMaxValue()));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_NUMBER.getMinValue(),
+                    ParamSize.PAGE_NUMBER.getMaxValue()),
+                ValidateErrRet.MAX_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_NUMBER.getMinValue(),
+                    ParamSize.PAGE_NUMBER.getMaxValue()),
+                ValidateErrRet.MIN_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.PAGE_NUMBER.getMinValue(),
+                    ParamSize.PAGE_NUMBER.getMaxValue()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
     }
 
     public static class MealValidationErrMsg {
 
-        public static class MealType extends BaseErrMsg {
+        public static class MealType {
 
             private static final String ITEM_NAME = RequestItem.Meal.MEAL_TYPE
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.REQUIRED,
-                    String.format(CommonValidationErrMsg.REQUIRED_MSG,
-                        ITEM_NAME),
-                    ValidateErrRet.TYPE,
-                    String.format(CommonValidationErrMsg.FORMAT_MSG, ITEM_NAME,
-                        CommonUtils.connectStr(ApiDefine.JP_COMMA,
-                            ApiDefine.MealType.getLabels())),
-                    ValidateErrRet.FORMAT,
-                    String.format(CommonValidationErrMsg.FORMAT_MSG, ITEM_NAME,
-                        CommonUtils.connectStr(ApiDefine.JP_COMMA,
-                            ApiDefine.MealType.getLabels())));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.REQUIRED,
+                String.format(CommonValidationErrMsg.REQUIRED_MSG,
+                    ITEM_NAME),
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.FORMAT_MSG, ITEM_NAME,
+                    CommonUtils.connectStr(ApiDefine.JP_COMMA,
+                        ApiDefine.MealType.getLabels())),
+                ValidateErrRet.FORMAT,
+                String.format(CommonValidationErrMsg.FORMAT_MSG, ITEM_NAME,
+                    CommonUtils.connectStr(ApiDefine.JP_COMMA,
+                        ApiDefine.MealType.getLabels())));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
-        public static class RegisterDateFrom extends BaseErrMsg {
+        public static class RegisterDateFrom {
 
             private static final String ITEM_NAME_FROM = RequestItem.Meal.REGISTER_DATE_FROM
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.FORMAT,
-                    String.format(CommonValidationErrMsg.DATE_FORMAT_MSG,
-                        ITEM_NAME_FROM),
-                    ValidateErrRet.CORRELATION,
-                    String.format(CommonValidationErrMsg.DATE_CORRELATION_MSG,
-                        ITEM_NAME_FROM));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.FORMAT,
+                String.format(CommonValidationErrMsg.DATE_FORMAT_MSG,
+                    ITEM_NAME_FROM),
+                ValidateErrRet.CORRELATION,
+                String.format(CommonValidationErrMsg.DATE_CORRELATION_MSG,
+                    ITEM_NAME_FROM,
+                    RequestItem.Meal.REGISTER_DATE_TO.getItemName()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
-        public static class RegisterDateTo extends BaseErrMsg {
+        public static class RegisterDateTo {
 
             private static final String ITEM_NAME_TO = RequestItem.Meal.REGISTER_DATE_FROM
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.FORMAT,
-                    String.format(CommonValidationErrMsg.DATE_FORMAT_MSG,
-                        ITEM_NAME_TO));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.FORMAT,
+                String.format(CommonValidationErrMsg.DATE_FORMAT_MSG,
+                    ITEM_NAME_TO));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
-        public static class Calorie extends BaseErrMsg {
+        public static class Calorie {
 
             private static final String ITEM_NAME = RequestItem.Meal.CALORIE
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.REQUIRED,
-                    String.format(CommonValidationErrMsg.REQUIRED_MSG,
-                        ITEM_NAME),
-                    ValidateErrRet.TYPE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.CALORIE.getMinValue(),
-                        ParamSize.CALORIE.getMaxValue()),
-                    ValidateErrRet.MAX_SIZE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.CALORIE.getMinValue(),
-                        ParamSize.CALORIE.getMaxValue()),
-                    ValidateErrRet.MIN_SIZE,
-                    String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
-                        ITEM_NAME,
-                        ParamSize.CALORIE.getMinValue(),
-                        ParamSize.CALORIE.getMaxValue()));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.REQUIRED,
+                String.format(CommonValidationErrMsg.REQUIRED_MSG,
+                    ITEM_NAME),
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.CALORIE.getMinValue(),
+                    ParamSize.CALORIE.getMaxValue()),
+                ValidateErrRet.MAX_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.CALORIE.getMinValue(),
+                    ParamSize.CALORIE.getMaxValue()),
+                ValidateErrRet.MIN_SIZE,
+                String.format(CommonValidationErrMsg.NUMBER_SIZE_MSG,
+                    ITEM_NAME,
+                    ParamSize.CALORIE.getMinValue(),
+                    ParamSize.CALORIE.getMaxValue()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
-        public static class Comment extends BaseErrMsg {
+        public static class Comment {
 
             private static final String ITEM_NAME = RequestItem.Meal.COMMENT
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.MAX_SIZE,
-                    String.format(CommonValidationErrMsg.STRING_MAX_LENGS_MSG,
-                        ITEM_NAME,
-                        ParamSize.CALORIE.getMinValue()));
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.MAX_SIZE,
+                String.format(CommonValidationErrMsg.STRING_MAX_LENGS_MSG,
+                    ITEM_NAME,
+                    ParamSize.CALORIE.getMinValue()));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
 
-        public static class MealImage extends BaseErrMsg {
+        public static class MealImage {
 
             private static final String ITEM_NAME = RequestItem.Meal.MEAL_IMAGE_FILE
                 .getItemName();
 
-            static {
-                messages = Map.of(
-                    ValidateErrRet.FORMAT,
-                    String.format(ITEM_NAME + "のファイル形式は%s、%s、%sの何れかになります。",
-                        MealImageExt.JPEG.getValue(),
-                        MealImageExt.JPG.getValue(),
-                        MealImageExt.PNG.getValue()),
-                    ValidateErrRet.DUPLICATE, ITEM_NAME + "のファイル名が重複しています。");
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.FORMAT,
+                String.format(ITEM_NAME + "のファイル形式は%s、%s、%sの何れかになります。",
+                    MealImageExt.JPEG.getValue(),
+                    MealImageExt.JPG.getValue(),
+                    MealImageExt.PNG.getValue()),
+                ValidateErrRet.DUPLICATE, ITEM_NAME + "のファイル名が重複しています。");
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
             }
         }
     }

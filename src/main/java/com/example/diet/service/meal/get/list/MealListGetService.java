@@ -51,7 +51,8 @@ public class MealListGetService implements
         if (errRet != null) {
             ValidationErrResponse errorInfo = new ValidationErrResponse();
             errorInfo
-                .setMessage(MealValidationErrMsg.MealType.getMessage(errRet));
+                .setMessage(
+                    MealValidationErrMsg.RegisterDateFrom.getMessage(errRet));
             errorInfo
                 .setSchema(RequestItem.Meal.REGISTER_DATE_FROM.getSchema());
             errorInfos.add(errorInfo);
@@ -64,7 +65,8 @@ public class MealListGetService implements
         if (errRet != null) {
             ValidationErrResponse errorInfo = new ValidationErrResponse();
             errorInfo
-                .setMessage(MealValidationErrMsg.MealType.getMessage(errRet));
+                .setMessage(
+                    MealValidationErrMsg.RegisterDateTo.getMessage(errRet));
             errorInfo
                 .setSchema(RequestItem.Meal.REGISTER_DATE_TO.getSchema());
             errorInfos.add(errorInfo);
@@ -73,13 +75,14 @@ public class MealListGetService implements
 
         if (registerDateFromRet && registerDateToRet) {
             errRet = ValidationUtils
-                .checkCompareFromTo(value.getRegisterDateTo(),
+                .checkCompareFromTo(value.getRegisterDateFrom(),
                     value.getRegisterDateTo());
             if (errRet != null) {
                 ValidationErrResponse errorInfo = new ValidationErrResponse();
                 errorInfo
                     .setMessage(
-                        MealValidationErrMsg.MealType.getMessage(errRet));
+                        MealValidationErrMsg.RegisterDateFrom
+                            .getMessage(errRet));
                 errorInfo
                     .setSchema(RequestItem.Meal.REGISTER_DATE_FROM.getSchema());
                 errorInfos.add(errorInfo);

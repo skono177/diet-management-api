@@ -19,8 +19,8 @@ import com.example.diet.common.utils.ValidationUtils;
 import com.example.diet.entity.meal.MealEntity;
 import com.example.diet.model.list.BaseListResponse;
 import com.example.diet.model.meal.MealSearchParam;
+import com.example.diet.model.meal.get.MealGetResponse;
 import com.example.diet.model.meal.get.list.MealListGetRequest;
-import com.example.diet.model.meal.get.list.MealListGetResponse;
 import com.example.diet.model.validation.ValidationErrResponse;
 import com.example.diet.repository.meal.MealRepository;
 import com.example.diet.service.BaseService;
@@ -28,7 +28,7 @@ import com.example.diet.service.meal.validation.MealValidation;
 
 @Service
 public class MealListGetService implements
-    BaseService<MealListGetRequest, BaseListResponse<MealListGetResponse>, List<ValidationErrResponse>> {
+    BaseService<MealListGetRequest, BaseListResponse<MealGetResponse>, List<ValidationErrResponse>> {
 
     private final MealRepository mealRepository;
 
@@ -106,7 +106,7 @@ public class MealListGetService implements
     }
 
     @Override
-    public BaseListResponse<MealListGetResponse> execute(String userId,
+    public BaseListResponse<MealGetResponse> execute(String userId,
         MealListGetRequest value)
         throws Exception {
 
@@ -169,16 +169,16 @@ public class MealListGetService implements
         return param;
     }
 
-    private BaseListResponse<MealListGetResponse> createResponse(
+    private BaseListResponse<MealGetResponse> createResponse(
         List<MealEntity> entities,
         Long count, MealSearchParam param) {
 
-        BaseListResponse<MealListGetResponse> response = SearchUtils
+        BaseListResponse<MealGetResponse> response = SearchUtils
             .createBaseListResponse(param, count);
 
-        List<MealListGetResponse> mealList = new ArrayList<>();
+        List<MealGetResponse> mealList = new ArrayList<>();
         entities.forEach(e -> {
-            MealListGetResponse mealResponse = new MealListGetResponse();
+            MealGetResponse mealResponse = new MealGetResponse();
             mealResponse.setMealId(e.getMealId());
             mealResponse.setRegisterDate(
                 CommonUtils.DateTimeToStr(e.getRegisterDate()));

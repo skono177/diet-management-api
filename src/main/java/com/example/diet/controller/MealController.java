@@ -8,8 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.utils.UserUtils;
 import com.example.diet.model.list.BaseListResponse;
+import com.example.diet.model.meal.get.MealGetResponse;
+import com.example.diet.model.meal.get.detail.MealDetailGetRequest;
 import com.example.diet.model.meal.get.list.MealListGetRequest;
-import com.example.diet.model.meal.get.list.MealListGetResponse;
 import com.example.diet.model.meal.register.MealRegisterRequest;
 import com.example.diet.model.meal.register.MealRegisterResponse;
 import com.example.diet.model.validation.ValidationErrResponse;
@@ -20,9 +21,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 // @formatter:off
@@ -35,13 +38,17 @@ public class MealController {
 
     private final BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService;
 
-    private final BaseService<MealListGetRequest, BaseListResponse<MealListGetResponse>, List<ValidationErrResponse>> getListMealService;
+    private final BaseService<MealListGetRequest, BaseListResponse<MealGetResponse>, List<ValidationErrResponse>> getListMealService;
+
+    private final BaseService<MealDetailGetRequest, Pair<Integer, MealGetResponse>, List<ValidationErrResponse>> getDetailMealService;
 
     public MealController(
         BaseService<MealRegisterRequest, MealRegisterResponse, List<ValidationErrResponse>> registerMealService,
-        BaseService<MealListGetRequest, BaseListResponse<MealListGetResponse>, List<ValidationErrResponse>> getListMealService) {
+        BaseService<MealListGetRequest, BaseListResponse<MealGetResponse>, List<ValidationErrResponse>> getListMealService,
+        BaseService<MealDetailGetRequest, Pair<Integer, MealGetResponse>, List<ValidationErrResponse>> getDetailMealService) {
         this.registerMealService = registerMealService;
         this.getListMealService = getListMealService;
+        this.getDetailMealService = getDetailMealService;
     }
 
     @PostMapping
@@ -82,7 +89,7 @@ public class MealController {
     }
 
     @GetMapping
-    public BaseListResponse<MealListGetResponse> getMealList(
+    public BaseListResponse<MealGetResponse> getMealList(
         HttpServletRequest request,
         HttpServletResponse response,
         @RequestParam(name = "meal_type", required = false) String mealType,
@@ -98,7 +105,7 @@ public class MealController {
         requestModel.setPageSize(pageSize);
         requestModel.setPageNumber(pageNumber);
 
-        BaseListResponse<MealListGetResponse> responseModel = new BaseListResponse<>();
+        BaseListResponse<MealGetResponse> responseModel = new BaseListResponse<>();
         List<ValidationErrResponse> validationRets = getListMealService
             .validation(requestModel);
         if (validationRets.size() > 0) {
@@ -121,10 +128,39 @@ public class MealController {
         return responseModel;
     }
 
-    @GetMapping("detail")
-    public String getMealDetail(@RequestParam(required = false) String param) {
-        logger.info("12345");
-        return new String("meal_detail");
+    @GetMapping("/{meal_id}")
+    public MealGetResponse getMealDetail(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        @PathVariable("meal_id") String mealId) {
+
+        MealDetailGetRequest requestModel = new MealDetailGetRequest();
+        requestModel.setMealId(mealId);
+
+        MealGetResponse responseModel = new MealGetResponse();
+        List<ValidationErrResponse> validationRets = getDetailMealService
+            .validation(requestModel);
+        if (validationRets.size() > 0) {
+            response.setStatus(400);
+            responseModel.setErrors(validationRets);
+            return responseModel;
+        }
+        String userId = UserUtils.getUserId("12345");
+
+        try {
+            Pair<Integer, MealGetResponse> ret = getDetailMealService
+                .execute(userId, requestModel);
+            Integer statusCode = ret.getLeft();
+            responseModel = ret.getRight();
+            if (!statusCode.equals(200)) {
+                response.setStatus(statusCode);
+                return null;
+            }
+            return responseModel;
+        } catch (Exception e) {
+            response.setStatus(500);
+            return null;
+        }
     }
 
 }

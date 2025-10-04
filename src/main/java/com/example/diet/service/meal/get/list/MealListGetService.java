@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import com.example.diet.common.define.ApiDefine;
 import com.example.diet.common.define.ApiDefine.RequestItem;
@@ -36,8 +35,7 @@ public class MealListGetService implements
         .getLogger(MealListGetService.class);
 
     public MealListGetService(
-        MealRepository mealRepository,
-        PlatformTransactionManager tManager) {
+        MealRepository mealRepository) {
         this.mealRepository = mealRepository;
     }
 

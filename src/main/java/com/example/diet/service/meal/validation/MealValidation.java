@@ -19,6 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class MealValidation {
 
+    public static ValidateErrRet checkMealId(String mealId, boolean required) {
+        if (StringUtils.isEmpty(mealId)) {
+            if (required) {
+                return ValidateErrRet.REQUIRED;
+            } else {
+                return null;
+            }
+        }
+
+        Integer mealIdInt = ValidationUtils.checkInteger(mealId);
+        if (mealIdInt == null) {
+            return ValidateErrRet.TYPE;
+        }
+        return null;
+    }
+
     public static ValidateErrRet checkMealTypeList(String mealTypes) {
 
         if (StringUtils.isEmpty(mealTypes)) {

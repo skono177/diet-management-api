@@ -33,6 +33,7 @@ public class ApiDefine {
         }
 
         public static enum Meal {
+            MEAL_ID("meal_id", "食事ID"),
             MEAL_TYPE("meal_type", "食事種別"),
             REGISTER_DATE_FROM("register_date_from", "登録日（from）"),
             REGISTER_DATE_TO("register_date_to", "登録日（to）"),

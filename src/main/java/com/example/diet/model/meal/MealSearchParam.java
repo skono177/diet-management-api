@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 // @formatter:on
 public class MealSearchParam extends BaseListParam {
 
+    private Integer mealId;
+
     private LocalDate registerDateFrom;
 
     private LocalDate registerDateTo;

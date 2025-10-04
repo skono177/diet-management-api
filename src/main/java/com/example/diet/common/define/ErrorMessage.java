@@ -13,6 +13,7 @@ public class ErrorMessage {
     public static class CommonValidationErrMsg {
 
         private static final String REQUIRED_MSG = "%sは必須です。";
+        private static final String TYPE_NUMBER_MSG = "%sは整数で設定してください。";
         private static final String STRING_MAX_LENGS_MSG = "%sは%d文字以下で入力してください。";
         private static final String FORMAT_MSG = "%sは%sの中から設定してください。";
         private static final String DATE_FORMAT_MSG = "%sは"
@@ -83,6 +84,25 @@ public class ErrorMessage {
     }
 
     public static class MealValidationErrMsg {
+
+        public static class MealId {
+
+            private static final String ITEM_NAME = RequestItem.Meal.MEAL_ID
+                .getItemName();
+
+            private static final Map<ValidateErrRet, String> messages = Map.of(
+                ValidateErrRet.REQUIRED,
+                String.format(CommonValidationErrMsg.REQUIRED_MSG,
+                    ITEM_NAME),
+                ValidateErrRet.TYPE,
+                String.format(CommonValidationErrMsg.TYPE_NUMBER_MSG,
+                    ITEM_NAME));
+
+            public static String getMessage(ValidateErrRet err) {
+                return messages.getOrDefault(err,
+                    CommonValidationErrMsg.UNKNOWN_ERR_MSG);
+            }
+        }
 
         public static class MealType {
 
